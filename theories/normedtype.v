@@ -318,7 +318,7 @@ Qed.
 Lemma nbhsC (x : T) (P : set T) :
   ~ (forall eps : {posnum R}, ~ (ball x eps%:num `<=` ~` P)) ->
   nbhs x (~` P).
-Proof. by move=> /ex_ball_sig [e] ?; apply/nbhs_ballP; exists e%:num. Qed.
+Proof. by move=> /ex_ball_sig [e] ?; apply/nbhs_ballP; exists e%:num => /=. Qed.
 
 Lemma nbhsC_ball (x : T) (P : set T) :
   nbhs x (~` P) -> {d : {posnum R} | ball x d%:num `<=` ~` P}.
@@ -1337,13 +1337,13 @@ which causes an inference problem in derive.v *)
 Lemma nbhs_le_nbhs_norm (x : V) : @nbhs V _ x `=>` nbhs_norm x.
 Proof.
 move=> P [_ /posnumP[e] subP]; apply/nbhs_ballP.
-by eexists; last (move=> y Py; apply/subP; apply/Py).
+by exists e%:num => //= y Py; apply/subP; apply/Py.
 Qed.
 
 Lemma nbhs_norm_le_nbhs x : nbhs_norm x `=>` nbhs x.
 Proof.
 move=> P /nbhs_ballP [_ /posnumP[e] Pxe].
-by exists e%:num => // y; apply/Pxe.
+by exists e%:num => //= y; apply/Pxe.
 Qed.
 
 Lemma nbhs_nbhs_norm : nbhs_norm = nbhs.
@@ -1370,7 +1370,7 @@ Proof. exact: nbhs_normE. Qed.
 
 Lemma nbhs_norm_ball_norm x (e : {posnum R}) :
   nbhs_norm x (ball_norm x e%:num).
-Proof. by rewrite ball_normE; exists e%:num. Qed.
+Proof. by rewrite ball_normE; exists e%:num => /=. Qed.
 
 Lemma nbhs_ball_norm (x : V) (eps : {posnum R}) : nbhs x (ball_norm x eps%:num).
 Proof. rewrite -nbhs_nbhs_norm; apply: nbhs_norm_ball_norm. Qed.
@@ -1782,9 +1782,9 @@ Lemma continuous_cvg_dist {R : numFieldType}
   (V W : pseudoMetricNormedZmodType R) (f : V -> W) x l :
   continuous f -> x --> l -> forall e : {posnum R}, `|f l - f x| < e%:num.
 Proof.
-move=> + + e => /(_ l)/cvg_dist/(_ _ (posnum_gt0 e)).
+move=> + + e => /(_ l)/cvg_dist/(_ _ (gt0 e)).
 rewrite near_map => /nbhs_ballP[_/posnumP[a]] + xl; apply.
-by move/cvg_ball : xl => /(_ _ a)/nbhs_ballP[_/posnumP[b]]; apply.
+by move/cvg_ball : xl => /(_ _ (gt0 a))/nbhs_ballP[_/posnumP[b]]; apply.
 Qed.
 
 Module Bigminr.
@@ -1936,9 +1936,9 @@ Proof. by []. Qed.
 
 Lemma ler_mx_norm_add x y : mx_norm (x + y) <= mx_norm x + mx_norm y.
 Proof.
-rewrite nng_le; apply/bigmax_lerP; split; first exact: addr_ge0.
+rewrite [_ <= _%:num]num_le/=; apply/bigmax_lerP; split; first exact: addr_ge0.
 move=> ij _; rewrite mxE; apply: le_trans (ler_norm_add _ _) _.
-rewrite ler_add // -nng_abs_le //= -nng_le /= normr_id nng_le;
+rewrite ler_add // -num_abs_le //= -num_le /= normr_id num_le;
   exact/ler_bigmax.
 Qed.
 
@@ -1946,13 +1946,13 @@ Lemma mx_norm_eq0 x : mx_norm x = 0 -> x = 0.
 Proof.
 move/eqP; rewrite eq_le => /andP[/(bigmax_lerP _ _ (fun _ => _%:nng)) [_ x0] _].
 apply/matrixP => i j; rewrite mxE; apply/eqP.
-by rewrite -nng_abs_eq0 eq_le (x0 (i,j)) // andTb -nng_le /= normr_ge0.
+by rewrite -num_abs_eq0 eq_le (x0 (i,j)) // andTb -num_le /= normr_ge0.
 Qed.
 
 Lemma mx_norm0 : mx_norm 0 = 0.
 Proof.
-rewrite /mx_norm (eq_bigr (fun=> 0%:nng)) /=.
-  by elim/big_ind : _ => // a b /val_inj ->{a} /val_inj ->{b}; rewrite maxxx.
+rewrite /mx_norm (eq_bigr (fun=> 0%R%:nng)) /=.
+  by elim/big_ind : _ => // a b; rewrite num_max => -> ->; rewrite maxxx.
 by move=> i _; apply val_inj => /=; rewrite mxE normr0.
 Qed.
 
@@ -1974,7 +1974,7 @@ rewrite !mulrS; apply/eqP; rewrite eq_le; apply/andP; split.
   by rewrite -ih; exact/ler_mx_norm_add.
 have [/mx_norm_eq0->|x0] := eqVneq (mx_norm x) 0.
   by rewrite -/(mx_norm 0) -/(mx_norm 0) !(mul0rn,addr0,mx_norm0).
-rewrite -/(mx_norm x) -nng_abs_le; last by rewrite addr_ge0 // mulrn_wge0.
+rewrite -/(mx_norm x) -num_abs_le; last by rewrite addr_ge0 // mulrn_wge0.
 apply/bigmax_gerP; right => /=.
 have [i Hi] := mx_norm_neq0 x0.
 exists i => //; rewrite Hi -!mulrS -normrMn mulmxnE.
@@ -1984,7 +1984,7 @@ Qed.
 Lemma mx_normN x : mx_norm (- x) = mx_norm x.
 Proof.
 congr (_%:nngnum).
-by apply eq_bigr => /= ? _; apply/eqP; rewrite mxE -nng_eq //= normrN.
+by apply eq_bigr => /= ? _; apply/eqP; rewrite mxE -num_eq //= normrN.
 Qed.
 
 End mx_norm.
@@ -2014,13 +2014,13 @@ Lemma mx_norm_ball :
   @ball _ [pseudoMetricType K of 'M[K]_(m.+1, n.+1)] = ball_ (fun x => `| x |).
 Proof.
 rewrite /normr /ball_ predeq3E => x e y /=; rewrite mx_normE; split => xey.
-- have lee0 : 0 < e := ball_gt0 xey.
-  have -> : e = (Nonneg.NngNum _ (ltW lee0))%:nngnum by [].
-  rewrite nng_lt; apply/bigmax_ltrP => /=.
-  by rewrite -nng_lt /=; split => // -[? ?] _; rewrite !mxE; exact: xey.
-- have lee0 : 0 < e by rewrite (le_lt_trans _ xey).
-  move: xey; have -> : e = (Nonneg.NngNum _ (ltW lee0))%:nngnum by [].
-  move=> /(bigmax_ltrP _ _ (fun _ => _%:nng)) /= [e0 xey] i j.
+- have e_gt0 : 0 < e := ball_gt0 xey.
+  move: e_gt0 (e_gt0) xey => /ltW/nonnegP[{}e] e_gt0 xey.
+  rewrite num_lt; apply/bigmax_ltrP => /=.
+  by rewrite -num_lt /=; split => // -[? ?] _; rewrite !mxE; exact: xey.
+- have e_gt0 : 0 < e by rewrite (le_lt_trans _ xey).
+  move: e_gt0 (e_gt0) xey => /ltW/nonnegP[{}e] e_gt0.
+  move=> /(bigmax_ltrP _ _ (fun _ => _%:sgn)) /= [e0 xey] i j.
   by move: (xey (i, j)); rewrite !mxE; exact.
 Qed.
 
@@ -2033,7 +2033,7 @@ Lemma mx_normZ (l : K) (x : 'M[K]_(m.+1, n.+1)) : `| l *: x | = `| l | * `| x |.
 Proof.
 rewrite {1 3}/normr /= !mx_normE
  (eq_bigr (fun i => (`|l| * `|x i.1 i.2|)%:nng)); last first.
-  by move=> i _; rewrite mxE //=; apply/eqP; rewrite -nng_eq /= normrM.
+  by move=> i _; rewrite mxE //=; apply/eqP; rewrite -num_eq /= normrM.
 elim/big_ind2 : _ => // [|a b c d bE dE]; first by rewrite mulr0.
 by rewrite nonneg_maxr; congr (maxr _ _)%:nngnum; exact/val_inj.
 Qed.
@@ -2204,7 +2204,7 @@ Qed.
 Lemma norm_continuous : continuous (normr : V -> K).
 Proof.
 move=> x; apply/cvg_distP => _/posnumP[e].
-rewrite near_map; apply/nbhs_normP; exists e%:num => // y.
+rewrite near_map; apply/nbhs_normP; exists e%:num => //= y.
 by rewrite -ball_normE; apply/(le_lt_trans (ler_dist_dist _ _)).
 Qed.
 
@@ -2809,7 +2809,7 @@ Lemma at_right_in_segment (R : realFieldType) (x : R) (P : set R) :
   (\forall e \near at_right (0 : R), {in `[x - e, x + e], forall x, P x})
   <-> (\near x, P x).
 Proof.
-split=> -[_/posnumP[e] /(_ _)/= Px]; [exists (e%:num / 2)|exists e%:num] => //.
+split=> -[_/posnumP[e] /(_ _)/= Px]; [exists (e%:num / 2)|exists e%:num] => //=.
   move=> y; rewrite /= ltr_distlC => /subset_itv_oo_cc; apply: Px => //.
   by rewrite distrC subr0 ger0_norm// ltr_pdivr_mulr// ltr_pmulr// ltr1n.
 move=> e'; rewrite /= distrC subr0 => + e'_gt0; rewrite gtr0_norm// => lt_e'e.
@@ -2882,7 +2882,7 @@ suff [a_ anx] : exists a_, forall n, a_ n != x /\ (U n `&` A) (a_ n).
     by rewrite (lt_le_trans Uan)// ltW//; near: n; exact: near_infty_natSinv_lt.
 have @a_ : nat -> T.
   move=> n; have : nbhs (x : T) (U n).
-    by apply/(nbhs_ballP (x:T) (U n)); rewrite nbhs_ballE; exists n.+1%:R^-1.
+    by apply/(nbhs_ballP (x:T) (U n)); rewrite nbhs_ballE; exists n.+1%:R^-1 => /=.
   by move/Ax/cid => [/= an [anx Aan Uan]]; exact: an.
 by exists a_ => n; rewrite /a_ /= /ssr_have; case: cid => ? [].
 Unshelve. all: by end_near. Qed.
@@ -3349,10 +3349,10 @@ rewrite ler_subl_addr -ler_subl_addl ltW //.
 have /fcont /(_ _ (nbhsx_ballx _ e)) [_/posnumP[d] supdfe] := supAab.
 have atrF := at_right_proper_filter (sup A); near (at_right (sup A)) => x.
 have /supdfe /= : ball (sup A) d%:num x.
-  by near: x; rewrite /= nbhs_simpl; exists d%:num => //.
+  by near: x; rewrite /= nbhs_simpl; exists d%:num => //=.
 rewrite /= => /ltr_distlC_subl; apply: le_lt_trans.
 rewrite ler_add2r ltW //; suff : forall t, t \in `](sup A), b] -> v < f t.
-  apply; rewrite inE; apply/andP; split; first by near: x; exists 1.
+  apply; rewrite inE; apply/andP; split; first by near: x; exists 1 => /=.
   near: x; exists (b - sup A) => /=.
     rewrite subr_gt0 lt_def (itvP supAab) andbT; apply/negP => /eqP besup.
     by move: lefsupv; rewrite leNgt -besup ltvfb.
@@ -3828,7 +3828,7 @@ Lemma near_shift {K : numDomainType} {R : normedModType K}
    (\near x, P x) = (\forall z \near y, (P \o shift (x - y)) z).
 Proof.
 rewrite propeqE; split=> /= /nbhs_normP [_/posnumP[e] ye];
-apply/nbhs_normP; exists e%:num => // t; rewrite -ball_normE /= => et.
+apply/nbhs_normP; exists e%:num => //= t; rewrite -ball_normE /= => et.
   apply: ye; rewrite -ball_normE /= !opprD addrA addrACA subrr add0r.
   by rewrite opprK addrC.
 have /= := ye (t - (x - y)); rewrite addrNK; apply.
@@ -3928,11 +3928,11 @@ Qed.
 Lemma nbhs_closedballP (R : realFieldType) (M : normedModType R) (B : set M)
   (x : M) : nbhs x B <-> exists (r : {posnum R}), closed_ball x r%:num `<=` B.
 Proof.
-split=> [/nbhs_ballP[r r0 xrB]|[e xeB]]; last first.
-  apply/nbhs_ballP; exists e%:num => //.
+split=> [/nbhs_ballP[_/posnumP[r] xrB]|[e xeB]]; last first.
+  apply/nbhs_ballP; exists e%:num => //=.
   exact: (subset_trans (@subset_closure _ _) xeB).
-have r20 : 0 < r / 2 by apply divr_gt0.
-exists (PosNum r20); apply: (subset_trans (closed_ball_subset _ _) xrB) => //=.
+exists (r%:num / 2)%:sgn.
+apply: (subset_trans (closed_ball_subset _ _) xrB) => //=.
 by rewrite lter_pdivr_mulr // ltr_pmulr // ltr1n.
 Qed.
 
@@ -3970,7 +3970,7 @@ Unshelve. all: by end_near. Qed.
 
 Lemma interior_closed_ballE (R : realType) (V : normedModType R) (x : V)
   (r : R) : 0 < r -> (closed_ball x r)^° = ball x r.
-Proof.
+Proof.  
 move=> r0; rewrite eqEsubset; split; last first.
   by rewrite -open_subsetE; [exact: subset_closure | exact: ball_open].
 move=> /= t; rewrite closed_ballE // /interior /= -nbhs_ballE => [[]] s s0.
@@ -3982,7 +3982,7 @@ pose z := t + `|e| *: (t - x); have /tsxr /= : `|t - z| < s.
   by near: e; apply/dnbhs0_lt; rewrite divr_gt0 // normr_gt0 subr_eq0.
 rewrite /z opprD addrA -scalerN -{1}(scale1r (x - t)) opprB -scalerDl normmZ.
 apply lt_le_trans; rewrite ltr_pmull; last by rewrite normr_gt0 subr_eq0 eq_sym.
-by rewrite ger0_norm // ltr_addl normr_gt0 //; near: e; exists 1.
+by rewrite ger0_norm // ltr_addl normr_gt0; near: e; exists 1 => /=.
 Unshelve. all: by end_near. Qed.
 
 Lemma open_nbhs_closed_ball (R : realType) (V : normedModType R) (x : V)
@@ -4125,21 +4125,21 @@ Lemma linear_boundedP (f : {linear V -> W}) : bounded_near f (nbhs (0 : V)) <->
   \forall r \near +oo, forall x, `|f x| <= r * `|x|.
 Proof.
 split=> [|/pinfty_ex_gt0 [r r0 Bf]]; last first.
-  apply/ex_bound; exists r; apply/nbhs_ballP; exists 1 => // x.
+  apply/ex_bound; exists r; apply/nbhs_ballP; exists 1 => //= x.
   rewrite -ball_normE //= sub0r normrN -(gtr_pmulr _ r0) => /ltW.
   exact/le_trans/Bf.
 rewrite /bounded_near => /pinfty_ex_gt0 [M M0 /nbhs_ballP [_/posnumP[e] efM]].
 near (0^' : set (set R^o)) => y; near=> r => x.
 have [->|x0] := eqVneq x 0; first by rewrite linear0 !normr0 mulr0.
 rewrite -ler_pdivr_mulr ?normr_gt0// -[ `|x|]normr_id mulrC.
-have y_gt0 : 0 < `|y| by rewrite normr_gt0; near: y; exists 1.
+have y_gt0 : 0 < `|y| by rewrite normr_gt0; near: y; exists 1 => /=.
 rewrite -(ler_pmul2l y_gt0) -normfV -!normmZ scalerA -linearZ.
 rewrite (le_trans (efM _ _)) //; last first.
   rewrite -ler_pdivr_mull //; near: r; apply: nbhs_pinfty_ge.
   by rewrite rpredM// ?ger0_real ?invr_ge0// ltW.
 rewrite -ball_normE/= sub0r normrN normmZ normrM normfV //.
 rewrite normr_id -mulrA mulVf ?normr_eq0 // mulr1; near: y.
-by apply/nbhs_ballP; exists e%:num=> // z; rewrite -ball_normE /= sub0r normrN.
+by apply/nbhs_ballP; exists e%:num=> //= z; rewrite -ball_normE /= sub0r normrN.
 Unshelve. all: by end_near. Qed.
 
 Lemma linear_continuous0 (f : {linear V -> W}) :
@@ -4158,8 +4158,7 @@ suff /ef1 : ball 0 e%:num (dx^-1 *: x) by rewrite -ball_normE /= sub0r normrN.
 rewrite -ball_normE /ball_ /= sub0r normrN normmZ normfV ?gt_eqF //.
 rewrite normrM normr_id (gtr0_norm d0) invfM ?(normr_eq0,gt_eqF)//.
 rewrite mulrAC -mulrA mulfV ?normr_eq0 // mulr1 -div1r ltr_pdivr_mulr //.
-near: d; exists e%:num^-1; rewrite realE invr_ge0 posnum_ge0; split => // r.
-by rewrite -ltr_pdivr_mull ?mulr1.
+by near: d; exists e%:num^-1; split=> // r; rewrite -ltr_pdivr_mull ?mulr1.
 Unshelve. all: by end_near. Qed.
 
 Lemma linear_bounded0 (f : {linear V -> W}) :
@@ -4206,7 +4205,7 @@ Lemma bounded_funP (f : {linear V -> W}) :
   bounded_near f (nbhs (0 : V)).
 Proof.
 split => [/(_ 1) [M Bf]|/linear_boundedP fr y].
-  apply/ex_bound; exists M; apply/nbhs_ballP; exists 1 => // x.
+  apply/ex_bound; exists M; apply/nbhs_ballP; exists 1 => //= x.
   by rewrite -ball_normE /ball_ /= sub0r normrN => x1; exact/Bf/ltW.
 near (@pinfty_nbhs R) => r; exists (y * r) => x xe.
 rewrite mulrC (@le_trans _ _ (r * `|x|)) //; first by move: {xe} x; near: r.
