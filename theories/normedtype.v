@@ -392,7 +392,7 @@ Global Instance Proper_dnbhs_realType (R : realType) (x : R) :
   ProperFilter x^'.
 Proof. exact: Proper_dnbhs_numFieldType. Qed.
 
-(** * Some Topology on [Rbar] *)
+(** * Some Topology on the extended real numbers *)
 
 Definition pinfty_nbhs (R : numFieldType) : set (set R) :=
   fun P => exists M, M \is Num.real /\ forall x, M < x -> P x.
@@ -3327,9 +3327,9 @@ apply/contra_lt: ltsupt => leftv.
 by move/ubP : (sup_upper_bound supA); apply; rewrite /A/= leftv letb.
 Grab Existential Variables. all: end_near. Qed.
 
-(** Local properties in [R] *)
+(* Local properties in [R] *)
 
-(** * Topology on [R]² *)
+(* Topology on [R]² *)
 
 (* Lemma locally_2d_align : *)
 (*   forall (P Q : R -> R -> Prop) x y, *)
