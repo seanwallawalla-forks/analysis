@@ -2945,7 +2945,7 @@ move=> iX lX uX; rewrite eqEsubset; split; first exact: right_bounded_interior.
 rewrite -(open_subsetE _ (@open_lt _ _)) => r rsupX.
 move/has_lbPn : lX => /(_ r)[y Xy yr].
 have hsX : has_sup X by split => //; exists y.
-have /(sup_adherent hsX)[e Xe] : 0 < sup X - r by rewrite subr_gt0.
+have /sup_adherent/(_ hsX)[e Xe] : 0 < sup X - r by rewrite subr_gt0.
 by rewrite opprB addrCA subrr addr0 => re; apply: (iX y e); rewrite ?ltW.
 Qed.
 
@@ -2956,7 +2956,7 @@ move=> iX lX uX; rewrite eqEsubset; split; first exact: left_bounded_interior.
 rewrite -(open_subsetE _ (@open_gt _ _)) => r infXr.
 move/has_ubPn : uX => /(_ r)[y Xy yr].
 have hiX : has_inf X by split => //; exists y.
-have /(inf_adherent hiX)[e Xe] : 0 < r - inf X by rewrite subr_gt0.
+have /inf_adherent/(_ hiX)[e Xe] : 0 < r - inf X by rewrite subr_gt0.
 by rewrite addrCA subrr addr0 => er; apply: (iX e y); rewrite ?ltW.
 Qed.
 
@@ -2971,10 +2971,10 @@ move=> r /andP[iXr rsX].
 have [X0|/set0P X0] := eqVneq X set0.
   by move: (lt_trans iXr rsX); rewrite X0 inf_out ?sup_out ?ltxx // => - [[]].
 have hiX : has_inf X by split.
-have /(inf_adherent hiX)[e Xe] : 0 < r - inf X by rewrite subr_gt0.
+have /inf_adherent/(_ hiX)[e Xe] : 0 < r - inf X by rewrite subr_gt0.
 rewrite addrCA subrr addr0 => er.
 have hsX : has_sup X by split.
-have /(sup_adherent hsX)[f Xf] : 0 < sup X - r by rewrite subr_gt0.
+have /sup_adherent/(_ hsX)[f Xf] : 0 < sup X - r by rewrite subr_gt0.
 by rewrite opprB addrCA subrr addr0 => rf; apply: (iX e f); rewrite ?ltW.
 Qed.
 
@@ -3183,7 +3183,7 @@ Proof.
 move=> leab fcont; gen have ivt : f v fcont / f a <= v <= f b ->
     exists2 c, c \in `[a, b] & f c = v; last first.
   case: (leP (f a) (f b)) => [] _ fabv; first exact: ivt.
-  have [||c cab /oppr_inj] := ivt (- f) (- v); last by exists c.
+  have [| |c cab /oppr_inj] := ivt (- f) (- v); last by exists c.
     by move=> x /fcont; apply: continuousN.
   by rewrite ler_oppr opprK ler_oppr opprK andbC.
 move=> /andP[]; rewrite le_eqVlt => /orP [/eqP<- _|ltfav].
@@ -3202,7 +3202,7 @@ exists (sup A) => //; have lefsupv : f (sup A) <= v.
   have vltfsup : 0 < f (sup A) - v by rewrite subr_gt0.
   have /fcont /(_ _ (nbhsx_ballx _ (PosNum vltfsup))) [_/posnumP[d] supdfe]
     := supAab.
-  have [t At supd_t] := sup_adherent supA [gt0 of d%:num].
+  have [t At supd_t] := sup_adherent [gt0 of d%:num] supA.
   suff /supdfe : ball (sup A) d%:num t.
     rewrite /= /ball /= ltr_norml => /andP [_].
     by rewrite ltr_add2l ltr_oppr opprK ltNge; have /andP [_ ->] := At.

@@ -248,8 +248,8 @@ have [Fj csumFj] : exists F, forall j, P (F j) j.
     by apply: LK; rewrite /mkset mem_nth.
   - have eL0 : (0 < e%:num / #|` L |%:R)%R.
       by rewrite divr_gt0 // ltr0n cardfs_gt0.
-    have [x [[F JLjF Faix] ese]] := ub_ereal_sup_adherent (PosNum eL0) esfin.
-    by exists F; split => //; rewrite Faix.
+    have [x [F JLjF Faix ese]] := ub_ereal_sup_adherent (PosNum eL0) esfin.
+    by exists F => //; rewrite Faix.
 pose F := \big[fsetU/fset0]_(i < #|`L|) Fj i.
 apply: (@le_trans _ _ (\sum_(i <- F) a i)); last first.
   apply ereal_sup_ub; exists F => //.

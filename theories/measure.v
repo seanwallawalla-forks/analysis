@@ -1322,7 +1322,7 @@ have [G PG] : {G : ((set T)^nat)^nat & forall n, P n (G n)}.
       by rewrite divr_gt0 // ltr0n expn_gt0.
     have /(lb_ereal_inf_adherent (PosNum en1)) : ereal_inf S \is a fin_num.
       by rewrite Sr.
-    move=> [x [[B [mB AnB muBx]] xS]].
+    move=> [x [B [mB AnB muBx] xS]].
     exists B; split => //; rewrite muBx -Sr; apply/ltW.
     by rewrite (lt_le_trans xS) // lee_add2l //= lee_fin ler_pmul.
   - by have := Aoo n; rewrite /mu_ext Soo.
