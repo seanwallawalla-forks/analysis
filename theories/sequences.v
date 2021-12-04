@@ -237,8 +237,8 @@ split => [u_cvg A|u_ge X [A [Ar AX]]].
   rewrite -(near_map u_ \oo (<=%R A)).
   by apply: u_cvg; apply: nbhs_pinfty_ge; rewrite num_real.
 rewrite !near_simpl [\near u_, X _](near_map u_ \oo); near=> x.
-apply: AX; rewrite (@lt_le_trans _ _ ((maxr 0 A) +1)) //.
-  by rewrite ltr_spaddr // le_maxr lexx orbT.
+apply: AX; rewrite (@le_trans _ _ ((maxr 0 A) +1)) //.
+  by rewrite ler_paddr // le_maxr lexx orbT.
 by near: x; apply: u_ge; rewrite ltr_spaddr // le_maxr lexx.
 Unshelve. all: by end_near. Qed.
 
@@ -248,7 +248,7 @@ rewrite propeqE; split => u_cvg P [/= l [l_real Pl]];
 rewrite !near_simpl [\forall x \near _, P _](near_map _ \oo);
 have [|/=n _]:= u_cvg (fun x => P (- x)); do ?by [exists n
   | exists (- l); split; rewrite ?rpredN// => x;
-    rewrite (ltr_oppl, ltr_oppr); apply: Pl].
+    rewrite (ler_oppl, ler_oppr); apply: Pl].
 by under [X in _ `<=` X]funext do rewrite /= opprK; exists n.
 Qed.
 
@@ -1368,8 +1368,8 @@ split => [u_cvg _/posnumP[A]|u_ge X [A [Ar AX]]].
   by apply: u_cvg; apply: ereal_nbhs_pinfty_ge.
 rewrite !near_simpl [\near u_, X _](near_map u_ \oo); near=> x.
 apply: AX.
-rewrite (@lt_le_trans _ _ (maxr 0 A + 1)%:E) //.
-  by rewrite EFinD lte_spaddr // ?lte_fin// lee_fin le_maxr lexx orbT.
+rewrite (@le_trans _ _ (maxr 0 A + 1)%:E) //.
+  by rewrite EFinD lee_paddr// lee_fin// le_maxr lexx orbT.
 by near: x; apply: u_ge; rewrite ltr_spaddr // le_maxr lexx.
 Unshelve. all: by end_near. Qed.
 
@@ -1381,9 +1381,9 @@ split => [u_cvg A A0|u_le X [A [Ar AX]]].
   by apply: u_cvg; apply: ereal_nbhs_ninfty_le.
 rewrite !near_simpl [\near u_, X _](near_map u_ \oo); near=> x.
 apply: AX.
-rewrite (@le_lt_trans _ _ (minr 0 A - 1)%:E) //.
+rewrite (@le_trans _ _ (minr 0 A - 1)%:E) //.
   by near: x; apply: u_le; rewrite ltr_subl_addl addr0 lt_minl ltr01.
-by rewrite lte_fin ltr_subl_addl lt_minl ltr_addr ltr01 orbT.
+by rewrite lee_fin ler_subl_addl le_minl ler_addr ler01 orbT.
 Unshelve. all: by end_near. Qed.
 
 Lemma ereal_squeeze (R : realType) (f g h : (\bar R)^nat) :

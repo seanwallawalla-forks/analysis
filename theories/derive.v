@@ -173,7 +173,8 @@ move=> /diff_locallyP [dfc]; rewrite -addrA.
 rewrite (littleo_bigO_eqo (cst (1 : R))); last first.
   apply/eqOP; near=> k; rewrite /cst [`|1|]normr1 mulr1.
   near=> y; rewrite ltW //; near: y; apply/nbhs_normP.
-  exists k; first by near: k; exists 0; rewrite real0.
+  exists k.
+    by near: k; exists 1; rewrite real1; split => // r; apply: lt_le_trans.
   by move=> ? /=; rewrite -ball_normE /= sub0r normrN.
 rewrite addfo; first by move=> /eqolim; rewrite cvg_comp_shift add0r.
 by apply/eqolim0P; apply: (cvg_trans (dfc 0)); rewrite linear0.
@@ -1312,7 +1313,7 @@ have imf_sup : has_sup imf.
     apply/compact_bounded/continuous_compact; last exact: segment_compact.
     by move=> ?; rewrite inE => /fcont.
   exists (M + 1); apply/ubP => y /imfltM yleM.
-  apply: le_trans (yleM _ _); last by rewrite ltr_addl.
+  apply: le_trans (yleM _ _); last by rewrite ler_addl.
   by rewrite ler_norm.
 case: (pselect (exists2 c, c \in `[a, b]%R & f c = sup imf)) => [|imf_ltsup].
   move=> [c cab fceqsup]; exists c => // t tab; rewrite fceqsup.

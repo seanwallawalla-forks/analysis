@@ -134,11 +134,21 @@ Proof. by rewrite lt_geF. Qed.
 Lemma posnum_lt0 x : (x%:num < 0 :> R) = false.
 Proof. by rewrite lt_gtF. Qed.
 
-Lemma pos_lt_maxl a x y : Num.max x%:num y%:num < a = (x%:num < a) && (y%:num < a).
+Lemma pos_lt_maxl a x y :
+  Num.max x%:num y%:num < a = (x%:num < a) && (y%:num < a).
 Proof. by rewrite comparable_lt_maxl ?real_comparable. Qed.
 
-Lemma pos_lt_minr (a : R) x y : a < Num.min x%:num y%:num = (a < x%:num) && (a < y%:num).
+Lemma pos_le_maxl a x y :
+  Num.max x%:num y%:num <= a = (x%:num <= a) && (y%:num <= a).
+Proof. by rewrite comparable_le_maxl ?real_comparable. Qed.
+
+Lemma pos_lt_minr a x y :
+  a < Num.min x%:num y%:num = (a < x%:num) && (a < y%:num).
 Proof. by rewrite comparable_lt_minr ?real_comparable. Qed.
+
+Lemma pos_le_minr (a : R) x y :
+  a <= Num.min x%:num y%:num = (a <= x%:num) && (a <= y%:num).
+Proof. by rewrite comparable_le_minr ?real_comparable. Qed.
 
 Lemma min_pos_gt0 x y : 0 < Num.min x%:num y%:num.
 Proof. by rewrite -posnum_min !posnum_gt0. Qed.

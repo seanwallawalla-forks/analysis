@@ -26,6 +26,16 @@
 - in `ereal.v`:
   + lemmas `ereal_sup_gt`, `ereal_inf_lt` now use `exists2`
 - notation `\*` moved from `realseq.v` to `topology.v`
+- in `posnum.v`:
+  + lemmas `pos_le_maxl`, `pos_le_minr`
+- in `ereal.v`:
+  + lemmas `lee_paddl`, `lte_addl`, `lee_paddr`, `lte_paddr`, `lee_lt_add`
+- in `ereal.v`:
+  + definitions `ereal_dnbhs` and `ereal_nbhs` changed to use large inequality instead
+    of strict inequality
+- in `normedtype.v`:
+  + definitions `pinfty_dnbhs` and `ninfty_nbhs` changed to use large inequality instead
+    of strict inequality
 
 ### Renamed
 
