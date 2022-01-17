@@ -31,6 +31,7 @@ theories/forms.v
 theories/derive.v
 theories/measure.v
 theories/lebesgue_integral.v
+theories/probability.v
 theories/summability.v
 theories/altreals/xfinmap.v
 theories/altreals/discrete.v
