@@ -216,8 +216,6 @@ Qed.
 
 End sequences_patched.
 
-Inductive box T := Box of T.
-
 Section sequences_R_lemmas_realFieldType.
 Variable R : realFieldType.
 Implicit Types u v : R ^nat.
