@@ -230,8 +230,7 @@ have : `|l - h x| < e%:num by near: x; apply: lga.
 have : `|l - f x| < e%:num by near: x; apply: lfa.
 rewrite ![`|l - _|]distrC; rewrite !ltr_distl => /andP[lf _] /andP[_ hl].
 by rewrite (lt_le_trans lf)? (le_lt_trans gh).
-Grab Existential Variables. all: end_near. Qed.
-
+Unshelve. all: end_near. Qed.
 
 Lemma cvgPpinfty (u_ : R ^nat) :
   u_ --> +oo <-> forall A, \forall n \near \oo, A <= u_ n.
