@@ -1939,14 +1939,16 @@ Proof.
 rewrite [_ <= _%:num]num_le/=; apply/bigmax_lerP; split; first exact: addr_ge0.
 move=> ij _; rewrite mxE; apply: le_trans (ler_norm_add _ _) _.
 rewrite ler_add // -num_abs_le //= -num_le /= normr_id num_le;
-  exact/ler_bigmax.
+  rewrite (_ : norm_snum ?[a] = `|?a|%:nng);
+  do ?[exact: ler_bigmax|exact: val_inj].
 Qed.
 
 Lemma mx_norm_eq0 x : mx_norm x = 0 -> x = 0.
 Proof.
 move/eqP; rewrite eq_le => /andP[/(bigmax_lerP _ _ (fun _ => _%:nng)) [_ x0] _].
 apply/matrixP => i j; rewrite mxE; apply/eqP.
-by rewrite -num_abs_eq0 eq_le (x0 (i,j)) // andTb -num_le /= normr_ge0.
+rewrite -num_abs_eq0 eq_le [0%:sgn <= _]leEsub/= normr_ge0 andbT.
+by apply: le_trans (x0 (i, j) erefl); rewrite leEsub.
 Qed.
 
 Lemma mx_norm0 : mx_norm 0 = 0.
@@ -1961,9 +1963,9 @@ Proof.
 rewrite /mx_norm.
 elim/big_ind : _ => [|a b Ha Hb H|/= i _ _]; [by rewrite eqxx| |by exists i].
 case: (leP a b) => ab.
-+ suff /Hb[i xi] : b != 0%:nng by exists i.
++ suff /Hb[i xi] : b%:num != 0 by exists i.
   by apply: contra H => b0; rewrite max_r.
-+ suff /Ha[i xi] : a != 0%:nng by exists i.
++ suff /Ha[i xi] : a%:num != 0 by exists i.
   by apply: contra H => a0; rewrite max_l // ltW.
 Qed.
 
