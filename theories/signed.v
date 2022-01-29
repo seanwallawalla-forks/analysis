@@ -248,8 +248,8 @@ Qed.
 Lemma neq0 x : unify nz NonZero -> x%:num != x0 :> T.
 Proof. by move=> nz_eq; case: x; rewrite nz_eq/= => ? /andP[]. Qed.
 
-Lemma eq0 x : unify nz NonZero -> x%:num == x0 :> T = false.
- Proof. by move=> /neq0-/(_ x)/negPf->. Qed.
+Lemma eq0F x : unify nz NonZero -> x%:num == x0 :> T = false.
+Proof. by move=> /neq0-/(_ x)/negPf->. Qed.
 
 End Theory.
 
@@ -351,7 +351,7 @@ Lemma add_snum_subproof (xnz ynz : nullity) (xr yr : reality)
 Proof.
 rewrite {}/rnz {}/rrl; apply/andP; split.
   move: xr yr xnz ynz x y => [[[]|]|] [[[]|]|] [] []//= x y;
-  by rewrite 1?addr_ss_eq0 ?(eq0, ge0, le0, andbF, orbT).
+  by rewrite 1?addr_ss_eq0 ?(eq0F, ge0, le0, andbF, orbT).
 have addr_le0 a b : a <= 0 -> b <= 0 -> a + b <= 0.
   by rewrite -!oppr_ge0 opprD; apply: addr_ge0.
 move: xr yr xnz ynz x y => [[[]|]|] [[[]|]|] [] []//= x y;
@@ -407,7 +407,7 @@ Lemma natmul_snum_subproof (xnz nnz : nullity) (xr nr : reality)
 Proof.
 rewrite {}/rnz {}/rrl; apply/andP; split.
   by move: xr nr xnz nnz x n => [[[]|]|] [[[]|]|] [] []// x n;
-     rewrite mulrn_eq0//= ?eq0.
+     rewrite mulrn_eq0//= ?eq0F.
 move: xr nr xnz nnz x n => [[[]|]|] [[[]|]|] [] []/= x [[|n]//= _] //;
    do ?[by rewrite mulrn_wge0|
         by rewrite mulrn_wle0|
@@ -459,7 +459,7 @@ Lemma exprn_snum_subproof (xnz : nullity) (xr : reality)
   Signed.spec 0 xnz rr (x%:num ^+ n : R).
 Proof.
 by rewrite {}/rr; case: xnz xr x => [] [[[]|]|]//= r/=;
-   rewrite ?expf_eq0 ?eq0 ?andbF//=;
+   rewrite ?expf_eq0 ?eq0F ?andbF//=;
    rewrite -?[_ || _]/(_ \is Num.real) ?realX ?exprn_ge0.
 Qed.
 
