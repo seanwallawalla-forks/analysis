@@ -4,9 +4,11 @@ From mathcomp Require Import ssrnat eqtype choice order ssralg ssrnum ssrint.
 Require Import boolp.
 
 Reserved Notation "{ 'compare' x0 & nz & cond }"
-  (at level 0, x0 at level 200, nz at level 200, format "{ 'compare'  x0  &  nz  &  cond }").
+  (at level 0, x0 at level 200, nz at level 200,
+   format "{ 'compare'  x0  &  nz  &  cond }").
 Reserved Notation "{ 'num' R & nz & cond }"
-  (at level 0, R at level 200, nz at level 200, format "{ 'num'  R  &  nz  &  cond }").
+  (at level 0, R at level 200, nz at level 200,
+   format "{ 'num'  R  &  nz  &  cond }").
 Reserved Notation "{ = x0 }" (at level 0, format "{ =  x0 }").
 Reserved Notation "{ > x0 }" (at level 0, format "{ >  x0 }").
 Reserved Notation "{ < x0 }" (at level 0, format "{ <  x0 }").
@@ -135,7 +137,8 @@ Record def (nz : nullity) (cond : reality) := Def {
 
 End Signed.
 
-Notation spec x0 nz cond x := ((nullity_bool nz ==> (x != x0)) && (reality_cond x0 cond x)).
+Notation spec x0 nz cond x :=
+  ((nullity_bool nz ==> (x != x0)) && (reality_cond x0 cond x)).
 
 Definition mk {d T} x0 nz cond r P : @def d T x0 nz cond :=
   @Def d T x0 nz cond r P.
@@ -313,7 +316,7 @@ by case: cond nz cond' nz' => [[[]|]|] [] [[[]|]|] [] //= nz'' cond'';
 Qed.
 
 Definition widen_signed x nz' cond'
-           (unz : unify_nz nz' nz) (ucond : unify_r cond' cond) :=
+    (unz : unify_nz nz' nz) (ucond : unify_r cond' cond) :=
   Signed.mk (widen_signed_subproof x unz ucond).
 
 End Theory.
@@ -340,13 +343,13 @@ Notation "[ 'le0' 'of' x ]" := (ltac:(refine (le0 x%:sgn))).
 Notation "[ 'cmp0' 'of' x ]" := (ltac:(refine (cmp0 x%:sgn))).
 Notation "[ 'neq0' 'of' x ]" := (ltac:(refine (neq0 x%:sgn))).
 
-Hint Extern 0 (is_true (0%R < _)%O)        => solve [apply: gt0] : core.
-Hint Extern 0 (is_true (_ < 0%R)%O)        => solve [apply: lt0] : core.
-Hint Extern 0 (is_true (0%R <= _)%O)       => solve [apply: ge0] : core.
-Hint Extern 0 (is_true (_ <= 0%R)%O)       => solve [apply: le0] : core.
+Hint Extern 0 (is_true (0%R < _)%O) => solve [apply: gt0] : core.
+Hint Extern 0 (is_true (_ < 0%R)%O) => solve [apply: lt0] : core.
+Hint Extern 0 (is_true (0%R <= _)%O) => solve [apply: ge0] : core.
+Hint Extern 0 (is_true (_ <= 0%R)%O) => solve [apply: le0] : core.
 Hint Extern 0 (is_true (_ \is Num.real)) => solve [apply: cmp0] : core.
-Hint Extern 0 (is_true (0%R >=< _)%O)      => solve [apply: cmp0] : core.
-Hint Extern 0 (is_true (_ != 0%R)%O)       => solve [apply: neq0] : core.
+Hint Extern 0 (is_true (0%R >=< _)%O) => solve [apply: cmp0] : core.
+Hint Extern 0 (is_true (_ != 0%R)%O) => solve [apply: neq0] : core.
 
 Notation "x %:pos" := (widen_signed x%:sgn : {posnum _}) (only parsing).
 Notation "x %:nng" := (widen_signed x%:sgn : {nonneg _}) (only parsing).
@@ -385,8 +388,7 @@ Proof. by rewrite /= oner_eq0 ler01. Qed.
 
 Canonical one_snum := Signed.mk one_snum_subproof.
 
-Definition opp_reality_subdef (xnz : nullity) (xr : reality) :
-    reality :=
+Definition opp_reality_subdef (xnz : nullity) (xr : reality) : reality :=
   match xr with
   | Real (Sign =0) => =0
   | Real (Sign >=0) => <=0
@@ -453,15 +455,14 @@ move: xr yr xnz ynz x y => [[[]|]|] [[[]|]|] [] []//= x y;
 Qed.
 
 Canonical add_snum (xnz ynz : nullity) (xr yr : reality)
-  (x : {num R & xnz & xr}) (y : {num R & ynz & yr}) :=
+    (x : {num R & xnz & xr}) (y : {num R & ynz & yr}) :=
   Signed.mk (add_snum_subproof x y).
 
 Definition mul_nonzero_subdef (xnz ynz : nullity) (xr yr : reality) :=
   nz_of_bool (xnz && ynz).
 Arguments mul_nonzero_subdef /.
 
-Definition mul_reality_subdef (xnz ynz : nullity)
-    (xr yr : reality) : reality :=
+Definition mul_reality_subdef (xnz ynz : nullity) (xr yr : reality) : reality :=
   match xr, yr with
   | Real (Sign =0), _ | _, Real (Sign =0) => =0
   | Real (Sign >=0), Real (Sign >=0)
@@ -490,10 +491,10 @@ Qed.
 
 Canonical mul_snum (xnz ynz : nullity) (xr yr : reality)
     (x : {num R & xnz & xr}) (y : {num R & ynz & yr}) :=
-   Signed.mk (mul_snum_subproof x y).
+  Signed.mk (mul_snum_subproof x y).
 
 Lemma natmul_snum_subproof (xnz nnz : nullity) (xr nr : reality)
-  (x : {num R & xnz & xr}) (n : {compare 0%N & nnz & nr})
+    (x : {num R & xnz & xr}) (n : {compare 0%N & nnz & nr})
     (rnz := mul_nonzero_subdef xnz nnz xr nr)
     (rrl := mul_reality_subdef xnz nnz xr nr) :
   Signed.spec 0 rnz rrl (x%:num *+ n%:num).
@@ -509,10 +510,10 @@ Qed.
 
 Canonical natmul_snum (xnz nnz : nullity) (xr nr : reality)
     (x : {num R & xnz & xr}) (n : {compare 0%N & nnz & nr}) :=
-   Signed.mk (natmul_snum_subproof x n).
+  Signed.mk (natmul_snum_subproof x n).
 
 Lemma intmul_snum_subproof (xnz nnz : nullity) (xr nr : reality)
-  (x : {num R & xnz & xr}) (n : {num int & nnz & nr})
+    (x : {num R & xnz & xr}) (n : {num int & nnz & nr})
     (rnz := mul_nonzero_subdef xnz nnz xr nr)
     (rrl := mul_reality_subdef xnz nnz xr nr) :
   Signed.spec 0 rnz rrl (x%:num *~ n%:num).
@@ -529,16 +530,18 @@ Qed.
 
 Canonical intmul_snum (xnz nnz : nullity) (xr nr : reality)
     (x : {num R & xnz & xr}) (n : {num int & nnz & nr}) :=
-   Signed.mk (intmul_snum_subproof x n).
+  Signed.mk (intmul_snum_subproof x n).
 
-Lemma inv_snum_subproof (xnz : nullity) (xr : reality) (x : {num R & xnz & xr}) :
+Lemma inv_snum_subproof (xnz : nullity) (xr : reality)
+    (x : {num R & xnz & xr}) :
   Signed.spec 0 xnz xr (x%:num^-1 : R).
 Proof.
-by case: xr x => [[[]|]|]//= [r]/=; rewrite invr_eq0 ?(invr_ge0, invr_le0) ?realV.
+by case: xr x => [[[]|]|]//= [r]/=;
+   rewrite invr_eq0 ?(invr_ge0, invr_le0) ?realV.
 Qed.
 
-Canonical inv_snum (xnz : nullity) (xr : reality)
-  (x : {num R & xnz & xr}) := Signed.mk (inv_snum_subproof x).
+Canonical inv_snum (xnz : nullity) (xr : reality) (x : {num R & xnz & xr}) :=
+  Signed.mk (inv_snum_subproof x).
 
 Definition exprn_nonzero_subdef (xnz nnz : nullity)
     (xr nr : reality) : nullity :=
@@ -557,7 +560,7 @@ Definition exprn_reality_subdef (xnz nnz : nullity)
 Arguments exprn_reality_subdef /.
 
 Lemma exprn_snum_subproof (xnz nnz : nullity) (xr nr : reality)
-  (x : {num R & xnz & xr}) (n : {compare 0%N & nnz & nr})
+    (x : {num R & xnz & xr}) (n : {compare 0%N & nnz & nr})
     (rnz := exprn_nonzero_subdef xnz nnz xr nr)
     (rrl := exprn_reality_subdef xnz nnz xr nr) :
   Signed.spec 0 rnz rrl (x%:num ^+ n%:num).
@@ -684,7 +687,7 @@ Definition sqrt_nonzero_subdef (xnz : nullity) (xr : reality) :=
 Arguments sqrt_nonzero_subdef /.
 
 Lemma sqrt_snum_subproof xnz xr (x : {num R & xnz & xr})
-  (nz := sqrt_nonzero_subdef xnz xr) :
+    (nz := sqrt_nonzero_subdef xnz xr) :
   Signed.spec 0 nz NonNeg (Num.sqrt x%:num).
 Proof.
 by rewrite {}/nz; case: xnz xr x => -[[[]|]|]//= x;
@@ -708,7 +711,7 @@ Definition sqrtC_reality_subdef (xnz : nullity) (xr : reality) : reality :=
 Arguments sqrtC_reality_subdef /.
 
 Lemma sqrtC_snum_subproof xnz xr (x : {num R & xnz & xr})
-  (r := sqrtC_reality_subdef xnz xr):
+    (r := sqrtC_reality_subdef xnz xr) :
   Signed.spec 0 xnz r (sqrtC x%:num).
 Proof.
 rewrite {}/r; apply/andP; split.
@@ -741,7 +744,7 @@ Proof. by []. Qed.
 Canonical succn_snum n := Signed.mk (succn_snum_subproof n).
 
 Lemma double_snum_subproof nz r (x : {compare 0 & nz & r}) :
-   Signed.spec 0 nz r x%:num.*2.
+  Signed.spec 0 nz r x%:num.*2.
 Proof. by  move: nz r x => [] [[[]|]|] [[|n]]. Qed.
 
 Canonical double_snum nz r x :=
@@ -758,7 +761,7 @@ by move: xr yr xnz ynz x y => [[[]|]|] [[[]|]|] [] []//= [[|x]//= _] [[|y]].
 Qed.
 
 Canonical addn_snum (xnz ynz : nullity) (xr yr : reality)
-  (x : {compare 0 & xnz & xr}) (y : {compare 0 & ynz & yr}) :=
+    (x : {compare 0 & xnz & xr}) (y : {compare 0 & ynz & yr}) :=
   Signed.mk (addn_snum_subproof x y).
 
 Lemma muln_snum_subproof (xnz ynz : nullity) (xr yr : reality)
@@ -774,10 +777,10 @@ Qed.
 
 Canonical muln_snum (xnz ynz : nullity) (xr yr : reality)
     (x : {compare 0 & xnz & xr}) (y : {compare 0 & ynz & yr}) :=
-   Signed.mk (muln_snum_subproof x y).
+  Signed.mk (muln_snum_subproof x y).
 
 Lemma expn_snum_subproof (xnz nnz : nullity) (xr nr : reality)
-  (x : {compare 0 & xnz & xr}) (n : {compare 0 & nnz & nr})
+    (x : {compare 0 & xnz & xr}) (n : {compare 0 & nnz & nr})
     (rnz := exprn_nonzero_subdef xnz nnz xr nr)
     (rrl := exprn_reality_subdef xnz nnz xr nr) :
   Signed.spec 0 rnz rrl (x%:num ^ n%:num).
