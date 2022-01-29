@@ -312,11 +312,16 @@ End Theory.
 
 Arguments bottom {d T x0 nz cond} _ {_ _}.
 Arguments gt0 {d T x0 nz cond} _ {_ _}.
-Arguments ge0 {d T x0 nz cond} _ {_}.
+Arguments le0F {d T x0 nz cond} _ {_ _}.
 Arguments lt0 {d T x0 nz cond} _ {_ _}.
+Arguments ge0F {d T x0 nz cond} _ {_ _}.
+Arguments ge0 {d T x0 nz cond} _ {_}.
+Arguments lt0F {d T x0 nz cond} _ {_}.
 Arguments le0 {d T x0 nz cond} _ {_}.
+Arguments gt0F {d T x0 nz cond} _ {_}.
 Arguments cmp0 {d T x0 nz cond} _ {_}.
 Arguments neq0 {d T x0 nz cond} _ {_}.
+Arguments eq0F {d T x0 nz cond} _ {_}.
 Arguments eq0 {d T x0 nz cond} _ {_}.
 Arguments widen_signed {d T x0 nz cond} _ {_ _ _ _}.
 
