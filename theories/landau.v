@@ -1043,7 +1043,7 @@ Lemma mulo (F : filter_on pT) (h1 h2 f g : pT -> R^o) :
   [o_F h1 of f] * [o_F h2 of g] =o_F (h1 * h2).
 Proof.
 rewrite [in RHS]littleoE // => _/posnumP[e]; near=> x.
-rewrite [`|_|]normrM -(sqr_sqrtr (ltW (gt0 e))) expr2.
+rewrite [`|_|]normrM -(sqr_sqrtr (ge0 e)) expr2.
 rewrite (@normrM _ (h1 x) (h2 x)) mulrACA ler_pmul //; near: x;
 by have [/= h] := littleo; apply.
 Unshelve. all: by end_near. Qed.
@@ -1069,7 +1069,7 @@ Lemma mulo_numClosedFieldType (F : filter_on pT) (h1 h2 f g : pT -> R^o) :
   [o_F h1 of f] * [o_F h2 of g] =o_F (h1 * h2).
 Proof.
 rewrite [in RHS]littleoE // => _/posnumP[e]; near=> x.
-rewrite [`|_|]normrM -(sqrCK (ltW (gt0 e))) expr2 sqrtCM ?qualifE//.
+rewrite [`|_|]normrM -(sqrCK (ge0 e)) expr2 sqrtCM ?qualifE//.
 rewrite (@normrM _ (h1 x) (h2 x)) mulrACA ler_pmul //; near: x;
 by have [/= h] := littleo; apply.
 Unshelve. all: by end_near. Qed.
