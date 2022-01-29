@@ -119,11 +119,10 @@ Definition reality_cond (n : reality) (x : T) :=
   | Real AnySign       => (x0 <= x) || (x <= x0)
   | Arbitary           => true
   end.
-Local Coercion reality_cond : reality >-> Funclass.
 
 Record def (nz : nullity) (cond : reality) := Def {
   r :> T;
-  P : (nz ==> (r != x0)) && cond r
+  P : (nz ==> (r != x0)) && reality_cond cond r
 }.
 
 End Signed.
