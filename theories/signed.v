@@ -138,7 +138,8 @@ Record def (nz : nullity) (cond : reality) := Def {
 End Signed.
 
 Notation spec x0 nz cond x :=
-  ((nullity_bool nz ==> (x != x0)) && (reality_cond x0 cond x)).
+  ((nullity_bool nz%snum_nullity ==> (x != x0))
+   && (reality_cond x0 cond%snum_sign x)).
 
 Definition mk {d T} x0 nz cond r P : @def d T x0 nz cond :=
   @Def d T x0 nz cond r P.
@@ -378,12 +379,12 @@ End Order.
 Section NumDomainStability.
 Context {R : numDomainType}.
 
-Lemma zero_snum_subproof : Signed.spec 0 MaybeZero EqZero (0 : R).
+Lemma zero_snum_subproof : Signed.spec 0 ?=0 =0 (0 : R).
 Proof. exact: eqxx. Qed.
 
 Canonical zero_snum := Signed.mk (zero_snum_subproof).
 
-Lemma one_snum_subproof : Signed.spec 0 NonZero NonNeg (1 : R).
+Lemma one_snum_subproof : Signed.spec 0 !=0 >=0 (1 : R).
 Proof. by rewrite /= oner_eq0 ler01. Qed.
 
 Canonical one_snum := Signed.mk one_snum_subproof.
@@ -671,7 +672,7 @@ Canonical max_snum (xnz ynz : nullity) (xr yr : reality)
   Signed.mk (max_snum_subproof x y).
 
 Lemma norm_snum_subproof {V : normedZmodType R} (x : V) :
-  Signed.spec 0 MaybeZero NonNeg `|x|.
+  Signed.spec 0 ?=0 >=0 `|x|.
 Proof. by rewrite /=. Qed.
 
 Canonical norm_snum {V : normedZmodType R} (x : V) :=
@@ -688,7 +689,7 @@ Arguments sqrt_nonzero_subdef /.
 
 Lemma sqrt_snum_subproof xnz xr (x : {num R & xnz & xr})
     (nz := sqrt_nonzero_subdef xnz xr) :
-  Signed.spec 0 nz NonNeg (Num.sqrt x%:num).
+  Signed.spec 0 nz >=0 (Num.sqrt x%:num).
 Proof.
 by rewrite {}/nz; case: xnz xr x => -[[[]|]|]//= x;
    rewrite /= sqrtr_ge0// andbT sqrtr_eq0 le0F.
@@ -728,17 +729,17 @@ Section NatStability.
 Local Open Scope nat_scope.
 Implicit Type (n : nat).
 
-Lemma nat_snum_subproof n : Signed.spec 0 MaybeZero NonNeg n.
+Lemma nat_snum_subproof n : Signed.spec 0 ?=0 >=0 n.
 Proof. by []. Qed.
 
 Canonical nat_snum n := Signed.mk (nat_snum_subproof n).
 
-Lemma zeron_snum_subproof n : Signed.spec 0 MaybeZero EqZero 0.
+Lemma zeron_snum_subproof n : Signed.spec 0 ?=0 =0 0.
 Proof. by []. Qed.
 
 Canonical zeron_snum n := Signed.mk (zeron_snum_subproof n).
 
-Lemma succn_snum_subproof n : Signed.spec 0 NonZero NonNeg n.+1.
+Lemma succn_snum_subproof n : Signed.spec 0 !=0 >=0 n.+1.
 Proof. by []. Qed.
 
 Canonical succn_snum n := Signed.mk (succn_snum_subproof n).
