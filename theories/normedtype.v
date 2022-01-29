@@ -1945,9 +1945,10 @@ Qed.
 
 Lemma mx_norm_eq0 x : mx_norm x = 0 -> x = 0.
 Proof.
-move/eqP; rewrite eq_le => /andP[/(bigmax_lerP _ _ (fun _ => _%:nng)) [_ x0] _].
+move/eqP; rewrite eq_le => /andP[+ _].
+rewrite [X in _ <= X](_ : 0 = 0%:nng%:num)// -leEsub => /bigmax_lerP[_ x0] .
 apply/matrixP => i j; rewrite mxE; apply/eqP.
-rewrite -num_abs_eq0 eq_le [0%:sgn <= _]leEsub/= normr_ge0 andbT.
+rewrite -num_abs_eq0 eq_le [0%:nng <= _]leEsub/= normr_ge0 andbT.
 by apply: le_trans (x0 (i, j) erefl); rewrite leEsub.
 Qed.
 
