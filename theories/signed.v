@@ -3,10 +3,10 @@ From Coq Require Import ssreflect ssrfun ssrbool.
 From mathcomp Require Import ssrnat eqtype choice order ssralg ssrnum ssrint.
 Require Import boolp.
 
-Reserved Notation "'{compare' x0 & nz & cond }"
-  (at level 0, x0 at level 200, nz at level 200, format "'{compare'  x0  &  nz  &  cond }").
-Reserved Notation "'{num' R & nz & cond }"
-  (at level 0, R at level 200, nz at level 200, format "'{num'  R  &  nz  &  cond }").
+Reserved Notation "{ 'compare' x0 & nz & cond }"
+  (at level 0, x0 at level 200, nz at level 200, format "{ 'compare'  x0  &  nz  &  cond }").
+Reserved Notation "{ 'num' R & nz & cond }"
+  (at level 0, R at level 200, nz at level 200, format "{ 'num'  R  &  nz  &  cond }").
 Reserved Notation "{ = x0 }" (at level 0, format "{ =  x0 }").
 Reserved Notation "{ > x0 }" (at level 0, format "{ >  x0 }").
 Reserved Notation "{ < x0 }" (at level 0, format "{ <  x0 }").
@@ -37,10 +37,10 @@ Reserved Notation "x %:sgn" (at level 2, format "x %:sgn").
 Reserved Notation "x %:num" (at level 2, format "x %:num").
 Reserved Notation "[ 'sgn' 'of' x ]" (format "[ 'sgn' 'of'  x ]").
 
-Reserved Notation "'{posnum' R }" (at level 0, format "'{posnum'  R }").
+Reserved Notation "{ 'posnum' R }" (at level 0, format "{ 'posnum'  R }").
 Reserved Notation "x %:pos" (at level 2, format "x %:pos").
 Reserved Notation "x %:nng" (at level 2, format "x %:nng").
-Reserved Notation "'{nonneg' R }" (at level 0, format "'{nonneg'  R }").
+Reserved Notation "{ 'nonneg' R }" (at level 0, format "{ 'nonneg'  R }").
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -153,8 +153,8 @@ Notation ">=<0" := AnySign : snum_sign_scope.
 Notation ">?<0" := Arbitrary : snum_sign_scope.
 Notation "!=0" := NonZero : snum_nullity_scope.
 Notation "?=0" := MaybeZero : snum_nullity_scope.
-Notation "'{compare' x0 & nz & cond }" := (def x0 nz cond) : type_scope.
-Notation "'{num' R & nz & cond }" := (def (0%R : R) nz cond) : type_scope.
+Notation "{ 'compare' x0 & nz & cond }" := (def x0 nz cond) : type_scope.
+Notation "{ 'num' R & nz & cond }" := (def (0%R : R) nz cond) : type_scope.
 Notation "{ = x0 : T }" := (def (x0 : T) MaybeZero EqZero) : type_scope.
 Notation "{ > x0 : T }" := (def (x0 : T) NonZero NonNeg) : type_scope.
 Notation "{ < x0 : T }" := (def (x0 : T) NonZero NonPos) : type_scope.
@@ -178,9 +178,9 @@ Notation "[ 'sgn' 'of' x ]" := (fromP (Phantom _ x)) : ring_scope.
 Notation num := r.
 Notation "x %:num" := (r x) : ring_scope.
 Definition posnum (R : numDomainType) of phant R := {> 0%R : R}.
-Notation "{posnum R }" := (@posnum _ (Phant R))  : type_scope.
+Notation "{ 'posnum' R }" := (@posnum _ (Phant R))  : type_scope.
 Definition nonneg (R : numDomainType) of phant R := {>= 0%R : R}.
-Notation "{nonneg R }" := (@nonneg _ (Phant R))  : type_scope.
+Notation "{ 'nonneg' R }" := (@nonneg _ (Phant R))  : type_scope.
 Notation "2" := 2%:R : ring_scope.
 Arguments r {disp T x0 nz cond}.
 End Exports.
