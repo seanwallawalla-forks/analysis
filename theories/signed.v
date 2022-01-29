@@ -126,16 +126,6 @@ Record def (nz : nullity) (cond : reality) := Def {
   P : (nz ==> (r != x0)) && cond r
 }.
 
-(* Record ty := Ty { *)
-(*   rty :> T; *)
-(*   nz : nullity; *)
-(*   cond : reality; *)
-(*   Pty : (nz ==> (rty != x0)) && cond rty *)
-(* }. *)
-
-(* Definition ty_def (x : ty) : def (nz x) (cond x) := Def (Pty x). *)
-(* Definition def_ty n c (x : def n c) : ty := Ty (P x). *)
-
 End Signed.
 
 Notation spec x0 nz cond x := ((nullity_bool nz ==> (x != x0)) && (reality_cond x0 cond x)).
@@ -153,8 +143,6 @@ Module Exports.
 Coercion Sign : sign >-> real.
 Coercion Real : real >-> reality.
 Coercion is_real : reality >-> bool.
-(* Coercion def_ty : def >-> ty. *)
-(* Coercion ty_def : ty >-> def. *)
 Bind Scope snum_sign_scope with sign.
 Bind Scope snum_sign_scope with reality.
 Bind Scope snum_nullity_scope with nullity.
