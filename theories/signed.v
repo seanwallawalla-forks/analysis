@@ -320,6 +320,10 @@ Definition widen_signed x nz' cond'
     (unz : unify_nz nz' nz) (ucond : unify_r cond' cond) :=
   Signed.mk (widen_signed_subproof x unz ucond).
 
+Lemma widen_signedE x (unz : unify_nz nz nz) (ucond : unify_r cond cond) :
+  @widen_signed x nz cond unz ucond = x.
+Proof. exact/val_inj. Qed.
+
 End Theory.
 
 Arguments bottom {d T x0 nz cond} _ {_ _}.
@@ -336,6 +340,7 @@ Arguments neq0 {d T x0 nz cond} _ {_}.
 Arguments eq0F {d T x0 nz cond} _ {_}.
 Arguments eq0 {d T x0 nz cond} _ {_}.
 Arguments widen_signed {d T x0 nz cond} _ {_ _ _ _}.
+Arguments widen_signedE {d T x0 nz cond} _ {_ _}.
 
 Notation "[ 'gt0' 'of' x ]" := (ltac:(refine (gt0 x%:sgn))).
 Notation "[ 'lt0' 'of' x ]" := (ltac:(refine (lt0 x%:sgn))).

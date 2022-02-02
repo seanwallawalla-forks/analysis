@@ -1938,9 +1938,7 @@ Lemma ler_mx_norm_add x y : mx_norm (x + y) <= mx_norm x + mx_norm y.
 Proof.
 rewrite [_ <= _%:num]num_le/=; apply/bigmax_lerP; split; first exact: addr_ge0.
 move=> ij _; rewrite mxE; apply: le_trans (ler_norm_add _ _) _.
-rewrite ler_add // -num_abs_le //= -num_le /= normr_id num_le;
-  rewrite (_ : norm_snum ?[a] = `|?a|%:nng);
-  do ?[exact: ler_bigmax|exact: val_inj].
+rewrite ler_add// num_le -[X in X <= _]widen_signedE; exact: ler_bigmax.
 Qed.
 
 Lemma mx_norm_eq0 x : mx_norm x = 0 -> x = 0.
@@ -1948,8 +1946,7 @@ Proof.
 move/eqP; rewrite eq_le => /andP[+ _].
 rewrite [X in _ <= X](_ : 0 = 0%:nng%:num)// -leEsub => /bigmax_lerP[_ x0] .
 apply/matrixP => i j; rewrite mxE; apply/eqP.
-rewrite -num_abs_eq0 eq_le [0%:nng <= _]leEsub/= normr_ge0 andbT.
-by apply: le_trans (x0 (i, j) erefl); rewrite leEsub.
+by rewrite -num_abs_eq0 eq_le -[_%:sgn]widen_signedE (x0 (i, j))//= -num_le/=.
 Qed.
 
 Lemma mx_norm0 : mx_norm 0 = 0.
