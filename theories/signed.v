@@ -324,6 +324,14 @@ Lemma widen_signedE x (unz : unify_nz nz nz) (ucond : unify_r cond cond) :
   @widen_signed x nz cond unz ucond = x.
 Proof. exact/val_inj. Qed.
 
+Lemma posE (x : sT) (unz : unify_nz !=0 nz) (ucond : unify_r >=0 cond) :
+  (widen_signed x%:num%:sgn unz ucond)%:num = x%:num.
+Proof. by []. Qed.
+
+Lemma nngE (x : sT) (unz : unify_nz ?=0 nz) (ucond : unify_r >=0 cond) :
+  (widen_signed x%:num%:sgn unz ucond)%:num = x%:num.
+Proof. by []. Qed.
+
 End Theory.
 
 Arguments bottom {d T x0 nz cond} _ {_ _}.
@@ -341,6 +349,8 @@ Arguments eq0F {d T x0 nz cond} _ {_}.
 Arguments eq0 {d T x0 nz cond} _ {_}.
 Arguments widen_signed {d T x0 nz cond} _ {_ _ _ _}.
 Arguments widen_signedE {d T x0 nz cond} _ {_ _}.
+Arguments posE {d T x0 nz cond} _ {_ _}.
+Arguments nngE {d T x0 nz cond} _ {_ _}.
 
 Notation "[ 'gt0' 'of' x ]" := (ltac:(refine (gt0 x%:sgn))).
 Notation "[ 'lt0' 'of' x ]" := (ltac:(refine (lt0 x%:sgn))).

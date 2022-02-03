@@ -1936,15 +1936,14 @@ Proof. by []. Qed.
 
 Lemma ler_mx_norm_add x y : mx_norm (x + y) <= mx_norm x + mx_norm y.
 Proof.
-rewrite [_ <= _%:num]num_le/=; apply/bigmax_lerP; split; first exact: addr_ge0.
+rewrite [_ <= _%:num]num_le; apply/bigmax_lerP; split; first exact: addr_ge0.
 move=> ij _; rewrite mxE; apply: le_trans (ler_norm_add _ _) _.
-rewrite ler_add// num_le -[X in X <= _]widen_signedE; exact: ler_bigmax.
+rewrite ler_add// -[X in X <= _]nngE num_le; exact: ler_bigmax.
 Qed.
 
 Lemma mx_norm_eq0 x : mx_norm x = 0 -> x = 0.
 Proof.
-move/eqP; rewrite eq_le => /andP[+ _].
-rewrite [X in _ <= X](_ : 0 = 0%:nng%:num)// -leEsub => /bigmax_lerP[_ x0] .
+move/eqP; rewrite eq_le -[0]nngE num_le => /andP[/bigmax_lerP[_ x0] _].
 apply/matrixP => i j; rewrite mxE; apply/eqP.
 by rewrite -num_abs_eq0 eq_le -[_%:sgn]widen_signedE (x0 (i, j))//= -num_le/=.
 Qed.
