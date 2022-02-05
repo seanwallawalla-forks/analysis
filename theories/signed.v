@@ -894,7 +894,7 @@ Proof. by move=> x y; rewrite !minEle num_le -fun_if. Qed.
 Lemma num_max : {morph num : x y / Order.max x y}.
 Proof. by move=> x y; rewrite !maxEle num_le -fun_if. Qed.
 
-Lemma num_abs_eq0 a : (`|a|%:sgn == 0%:nng) = (a == 0).
+Lemma num_abs_eq0 a : (`|a|%:nng == 0%:nng) = (a == 0).
 Proof. by rewrite -normr_eq0. Qed.
 
 End Morph.
@@ -945,10 +945,10 @@ Local Notation nR := {num R & ?=0 & >=0}.
 Implicit Type x y : nR.
 Local Notation num := (@num _ _ (0 : R) ?=0 >=0).
 
-Lemma num_abs_le a x : 0 <= a -> (`|a|%:sgn <= x) = (a <= x%:num).
+Lemma num_abs_le a x : 0 <= a -> (`|a|%:nng <= x) = (a <= x%:num).
 Proof. by move=> a0; rewrite -num_le//= ger0_norm. Qed.
 
-Lemma num_abs_lt a x : 0 <= a -> (`|a|%:sgn < x) = (a < x%:num).
+Lemma num_abs_lt a x : 0 <= a -> (`|a|%:nng < x) = (a < x%:num).
 Proof. by move=> a0; rewrite -num_lt/= ger0_norm. Qed.
 End MorphGe0.
 

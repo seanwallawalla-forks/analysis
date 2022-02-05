@@ -1945,7 +1945,7 @@ Lemma mx_norm_eq0 x : mx_norm x = 0 -> x = 0.
 Proof.
 move/eqP; rewrite eq_le -[0]nngE num_le => /andP[/bigmax_lerP[_ x0] _].
 apply/matrixP => i j; rewrite mxE; apply/eqP.
-by rewrite -num_abs_eq0 eq_le -[_%:sgn]widen_signedE (x0 (i, j))//= -num_le/=.
+by rewrite -num_abs_eq0 eq_le (x0 (i, j))//= -num_le/=.
 Qed.
 
 Lemma mx_norm0 : mx_norm 0 = 0.
