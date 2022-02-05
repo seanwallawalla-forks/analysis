@@ -3969,7 +3969,7 @@ Unshelve. all: by end_near. Qed.
 
 Lemma interior_closed_ballE (R : realType) (V : normedModType R) (x : V)
   (r : R) : 0 < r -> (closed_ball x r)^° = ball x r.
-Proof.  
+Proof.
 move=> r0; rewrite eqEsubset; split; last first.
   by rewrite -open_subsetE; [exact: subset_closure | exact: ball_open].
 move=> /= t; rewrite closed_ballE // /interior /= -nbhs_ballE => [[]] s s0.
