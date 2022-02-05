@@ -39,16 +39,4 @@ Reserved Notation "x %:nngnum" (at level 2, left associativity, format "x %:nngn
 Notation nngnum := (@num _ _ 0 ?=0 >=0).
 Notation "x %:nngnum" := (nngnum x).
 
-Section NngNum.
-Context {R : numDomainType}.
-Implicit Types a : R.
-Implicit Types x y : {nonneg R}.
-
-(* Cyril: remove? *)
-Lemma nonneg_maxr a x y : `|a| * (Num.max x y)%:nngnum =
-  (Num.max (`|a| * x%:nngnum)%:nng (`|a| * y%:nngnum)%:nng)%:nngnum.
-Proof. by rewrite !num_max maxr_pmulr. Qed.
-
-End NngNum.
-
 Import Num.Def.

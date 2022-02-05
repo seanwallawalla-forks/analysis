@@ -2034,7 +2034,7 @@ rewrite {1 3}/normr /= !mx_normE
  (eq_bigr (fun i => (`|l| * `|x i.1 i.2|)%:nng)); last first.
   by move=> i _; rewrite mxE //=; apply/eqP; rewrite -num_eq /= normrM.
 elim/big_ind2 : _ => // [|a b c d bE dE]; first by rewrite mulr0.
-by rewrite nonneg_maxr; congr (maxr _ _)%:nngnum; exact/val_inj.
+by rewrite !num_max bE dE maxr_pmulr.
 Qed.
 
 Definition matrix_NormedModMixin := NormedModMixin mx_normZ.
