@@ -232,6 +232,7 @@ Definition reality_cond (n : reality) (x : T) :=
 
 Record def (nz : nullity) (cond : reality) := Def {
   r :> T;
+  #[canonical=no]
   P : (nz ==> (r != x0)) && reality_cond cond r
 }.
 
